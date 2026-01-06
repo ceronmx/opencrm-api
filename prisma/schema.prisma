@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../ERD.pdf"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  SALES_REP
+  MANAGER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  LOST
+}
+
+enum DealStage {
+  DISCOVERY
+  PROPOSAL
+  NEGOTIATION
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum ActivityType {
+  CALL
+  EMAIL
+  METING
+  NOTE
+}
+
+model User_Credential {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+  users    User[]
+}
+
+model User_Information {
+  id       String @id @default(uuid())
+  name     String?
+  lastname String?
+}
+
+model User {
+  id           String     @id @default(uuid())
+  credential   User_Credential @relation(fields: [credentialId], references: [id])
+  credentialId String
+  isActive     Boolean    @default(true)
+  role         Role       @default(SALES_REP)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
