@@ -6,10 +6,17 @@ import { PrismaService } from './prisma/prisma.service';
 import { PasswordService } from './password/password.service';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from './jwt/jwt.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, JwtModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env'
+    }), 
+    AuthModule, 
+    UserModule
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService, PasswordService, AuthService],
 })
